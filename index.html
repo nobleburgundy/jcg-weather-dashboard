@@ -9,9 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100&family=Roboto+Slab&display=swap"
         rel="stylesheet">
     <script src="https://kit.fontawesome.com/b34966f7b7.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
     </script>
@@ -19,24 +17,22 @@
     <title>Weather Dashboard</title>
 </head>
 
-
 <body>
     <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #90e0ef;">
         <a href=" index.html" class="navbar-brand">Weather Dashboard</a>
-        <div id="score-time" class="ml-auto">
-        </div>
+        <form id="search-form" class="form-inline ml-auto">
+            <input type="text" class="form-control" id="search-input" placeholder="Search for a city"
+                aria-label="search" aria-describedby="search-button" minlength="3" required>
+            <button class="btn btn-outline-primary ml-2" type="submit" id="search-button">Search</button>
+        </form>
     </nav>
     <main class="container-fluid">
         <article class="row">
             <aside class="col-md-2 p-3 mt-3" id="search-section">
-                <form class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search" aria-label="search"
-                        aria-describedby="search-button">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-primary" type="button" id="search-button"><i
-                                class="fas fa-search"></i></button>
-                    </div>
-                </form>
+
+                <div id="saved-search-list">
+
+                </div>
             </aside>
             <section class="col-10">
                 <div class="jumbotron p-3 mt-3">
@@ -46,11 +42,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-5">
-                            <p>Temperature: <span id="temperature">95 F</span></p>
-                            <p>Humidity: <span id="humidity">80%</span></p>
-                            <p>Wind Speed: <span id="wind-speed">25 Knots</span></p>
-                            <p>UV Index: <span id="uv-index"></span>8.3</p>
+                        <div class="col-md-5" id="todays-weather">
+                            <p>Temperature: <span id="todays-temperature"></span>°F</p>
+                            <p>Feels Like: <span id="todays-feels-like"></span>°F</p>
+                            <p>Humidity: <span id="todays-humidity"></span>%</p>
+                            <p>Wind Speed: <span id="todays-wind"></span><i class="fas fa-arrow-up"
+                                    id="wind-dir-icon"></i></p>
+                            <p>UV Index: <span id="todays-uv"></span></p>
                         </div>
                         <div class="col-md-7">
                             <div class="jumbo-weather-icon"><i class="fas fa-cloud-sun-rain"></i></div>
@@ -62,38 +60,38 @@
                     <div class="forecast-day" id="day-one">
                         <p><span id="five-day-1-date">9/10/2020</span></p>
                         <div class="weather-icon" id="five-day-2-icon"><i class="fas fa-sun"></i></div>
-                        <p>Temp: <span id="five-day-1-temp">70 F</span></p>
+                        <p>Temp: <span id="five-day-1-temp">70 °F</span></p>
                         <p>Humidity: <span id="five-day-1-humidity">50%</span></p>
                     </div>
                     <div class="forecast-day" id="day-two">
                         <p><span id="five-day-2-date">9/11/2020</span></p>
                         <div class="weather-icon" id="five-day-2-icon"><i class="fas fa-sun"></i></div>
-                        <p>Temp: <span id="five-day-2-temp">72 F</span></p>
+                        <p>Temp: <span id="five-day-2-temp">72 °F</span></p>
                         <p>Humidity: <span id="five-day-2-humidity">50%</span></p>
                     </div>
                     <div class="forecast-day" id="day-three">
                         <p><span id="five-day-3-date">9/12/2020</span></p>
                         <div class="weather-icon" id="five-day-2-icon"><i class="fas fa-snowflake"></i></div>
-                        <p>Temp: <span id="five-day-3-temp">30 F</span></p>
+                        <p>Temp: <span id="five-day-3-temp">30 °F</span></p>
                         <p>Humidity: <span id="five-day-3-humidity">20%</span></p>
                     </div>
                     <div class="forecast-day" id="day-four">
                         <p><span id="five-day-4-date">9/13/2020</span></p>
                         <div class="weather-icon" id="five-day-2-icon"><i class="fas fa-cloud-rain"></i></div>
-                        <p>Temp: <span id="five-day-4-temp">40 F</span></p>
+                        <p>Temp: <span id="five-day-4-temp">40 °F</span></p>
                         <p>Humidity: <span id="five-day-4-humidity">20%</span></p>
                     </div>
                     <div class="forecast-day" id="day-five">
                         <p><span id="five-day-5-date">9/14/2020</span></p>
                         <div class="weather-icon" id="five-day-2-icon"><i class="fas fa-cloud-sun-rain"></i></div>
-                        <p>Temp: <span id="five-day-5-temp">60 F</span></p>
+                        <p>Temp: <span id="five-day-5-temp">60 °F</span></p>
                         <p>Humidity: <span id="five-day-5-humidity">50%</span></p>
                     </div>
                 </div>
             </section>
         </article>
     </main>
-
+    <script src="./assets/weather.js"></script>
 </body>
 
 </html>
