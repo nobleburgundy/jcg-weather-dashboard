@@ -1,0 +1,25 @@
+#search-section {
+    background-color: #e5e5e5;
+}
+
+.jumbo-weather-icon i {
+    font-size: 7rem;
+}
+
+.weather-icon {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.forecast-day {
+    background-color: #90e0ef;
+    height: 150px;
+    width: 150px;
+    display: inline-block;
+}
+
+.forecast-day p {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+}
