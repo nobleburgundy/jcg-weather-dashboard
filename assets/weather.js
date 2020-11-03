@@ -14,7 +14,14 @@ $("#search-form").on("submit", function (event) {
   $("#jumbo-city").text(searchText);
   getWeatherDataForCity(searchText);
 
-  // Store search in an array
+  // Store search in an array if not already there
+  if ($.inArray(searchText, searchHistoryArray)) {
+    // if already in the array, remove it from the list and array, then move to the front
+    let existingButton = $(`button:contains(${searchText})`);
+    existingButton.remove();
+    searchHistoryArray = searchHistoryArray.filter((text) => text !== searchText);
+  }
+
   searchHistoryArray.unshift(searchText);
   $("#saved-search-list").prepend(searchHistoryBtn(searchText));
   saveRecentSearchesToLocalStorage();
