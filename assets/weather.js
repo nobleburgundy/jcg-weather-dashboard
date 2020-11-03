@@ -1,31 +1,43 @@
-let apiKey = "b9e555b2714e9fd91e3ffa2b450b8030";
+const API_KEY = "b9e555b2714e9fd91e3ffa2b450b8030";
 const LOCAL_STORAGE_KEY = "recent-weather-searches";
 let searchHistoryArray = [];
+let searchCity = "";
 
 $(document).ready(function () {
   localSearchHistroyFromLocalStorage();
   renderSavedSearchButtons();
+  // By default just load the latest city
+  getWeatherDataForCity(searchHistoryArray[0]);
 });
 
 $("#search-form").on("submit", function (event) {
   event.preventDefault();
 
-  let searchText = $("#search-input").val();
-  $("#jumbo-city").text(searchText);
-  getWeatherDataForCity(searchText);
+  searchCity = $("#search-input").val();
+  getWeatherDataForCity(searchCity);
+  updateSearchHistory();
+});
 
+$(document).on("click", ".saved-search-btn", function () {
+  searchCity = $(this).text();
+  console.log(searchCity);
+  getWeatherDataForCity(searchCity);
+  updateSearchHistory();
+});
+
+function updateSearchHistory() {
   // Store search in an array if not already there
-  if ($.inArray(searchText, searchHistoryArray)) {
+  if ($.inArray(searchCity, searchHistoryArray)) {
     // if already in the array, remove it from the list and array, then move to the front
-    let existingButton = $(`button:contains(${searchText})`);
+    let existingButton = $(`button:contains(${searchCity})`);
     existingButton.remove();
-    searchHistoryArray = searchHistoryArray.filter((text) => text !== searchText);
+    searchHistoryArray = searchHistoryArray.filter((text) => text !== searchCity);
   }
 
-  searchHistoryArray.unshift(searchText);
-  $("#saved-search-list").prepend(searchHistoryBtn(searchText));
+  searchHistoryArray.unshift(searchCity);
+  $("#saved-search-list").prepend(searchHistoryBtn(searchCity));
   saveRecentSearchesToLocalStorage();
-});
+}
 
 function saveRecentSearchesToLocalStorage() {
   let searches = JSON.stringify(searchHistoryArray);
@@ -53,13 +65,14 @@ function renderSavedSearchButtons() {
 }
 
 function getWeatherDataForCity(city) {
-  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
+  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`;
 
   $.ajax({
     url: apiUrl,
     method: "GET",
   }).then(function (response) {
     console.log(response);
+    $("#jumbo-city").text(city);
     let weatherTodayTempF = ktoF(response.list[0].main.temp);
     let weatherTodayFeelsLikeTemp = ktoF(response.list[0].main.feels_like);
     let lat = response.city.coord.lat;
@@ -73,7 +86,7 @@ function getWeatherDataForCity(city) {
     $("#todays-wind").text(windSpeedImperial + " mph ");
     $("#wind-dir-icon").css("transform", `rotate(${deg}deg)`);
     // uv index is from separate api
-    let uvApiUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    let uvApiUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
     $.ajax({
       url: uvApiUrl,
       method: "GET",
