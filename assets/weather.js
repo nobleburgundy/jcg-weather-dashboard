@@ -1,5 +1,11 @@
 let apiKey = "b9e555b2714e9fd91e3ffa2b450b8030";
-let weatherArray = [0, 1, 2, 3, 4, 5];
+const LOCAL_STORAGE_KEY = "recent-weather-searches";
+let searchHistoryArray = [];
+
+$(document).ready(function () {
+  localSearchHistroyFromLocalStorage();
+  renderSavedSearchButtons();
+});
 
 $("#search-form").on("submit", function (event) {
   event.preventDefault();
@@ -8,11 +14,36 @@ $("#search-form").on("submit", function (event) {
   $("#jumbo-city").text(searchText);
   getWeatherDataForCity(searchText);
 
-  // Prepend the search as a saved button
-  let newSearchButton = $("<button>");
-  newSearchButton.addClass("btn btn-outline-secondary saved-search-btn").text(searchText);
-  $("#saved-search-list").prepend(newSearchButton);
+  // Store search in an array
+  searchHistoryArray.unshift(searchText);
+  $("#saved-search-list").prepend(searchHistoryBtn(searchText));
+  saveRecentSearchesToLocalStorage();
 });
+
+function saveRecentSearchesToLocalStorage() {
+  let searches = JSON.stringify(searchHistoryArray);
+  localStorage.setItem(LOCAL_STORAGE_KEY, searches);
+}
+
+function localSearchHistroyFromLocalStorage() {
+  let local = localStorage.getItem(LOCAL_STORAGE_KEY);
+  searchHistoryArray = local ? JSON.parse(local) : [];
+}
+
+let searchHistoryBtn = function (text) {
+  let newButton = $("<button>");
+  newButton.addClass("btn btn-outline-primary saved-search-btn");
+  newButton.text(text);
+  return newButton;
+};
+
+// Render the saved searches array
+function renderSavedSearchButtons() {
+  console.log(searchHistoryArray);
+  for (let i = 0; i < searchHistoryArray.length; i++) {
+    $("#saved-search-list").append(searchHistoryBtn(searchHistoryArray[i]));
+  }
+}
 
 function getWeatherDataForCity(city) {
   let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
