@@ -3,6 +3,8 @@ const LOCAL_STORAGE_KEY = "recent-weather-searches";
 let searchHistoryArray = [];
 let searchCity = "";
 let data;
+let lat;
+let lon;
 
 $(document).ready(function () {
   localSearchHistroyFromLocalStorage();
@@ -79,8 +81,8 @@ function getWeatherDataForCity() {
     $("#jumbo-city").text(city);
     let weatherTodayTempF = ktoF(response.main.temp);
     let weatherTodayFeelsLikeTemp = ktoF(response.main.feels_like);
-    let lat = response.coord.lat;
-    let lon = response.coord.lon;
+    lat = response.coord.lat;
+    lon = response.coord.lon;
     let windSpeedMetric = response.wind.speed;
     let windSpeedImperial = (windSpeedMetric * 2.237).toFixed(0);
     let deg = response.wind.deg;
@@ -103,34 +105,31 @@ function getWeatherDataForCity() {
 
 function setFiveDayForcast() {
   // use forecast API
-  let forecastAPI = `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&appid=${API_KEY}`;
+  let forecastAPI = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,current,alerts&appid=${API_KEY}`;
   $.ajax({
     url: forecastAPI,
     method: "GET",
   }).then(function (response) {
     // loop through days, set the data
     console.log(response);
-    let day = 1;
-    for (let i = 4; i < response.list.length; i += 8) {
-      // 8 items per day (every 3 hours)
-      // noon starts at 4
-      let date = response.list[i].dt_txt;
-      let temp = ktoF(response.list[i].main.temp);
-      let humidity = response.list[i].main.humidity;
-      let wind = response.list[i].wind.speed;
+    for (let i = 1; i < 6; i++) {
+      let dateUnix = response.daily[i].dt;
+      let date = moment.unix(dateUnix).format("L");
+      let temp = ktoF(response.daily[i].temp.max);
+      let humidity = response.daily[i].humidity;
+      let wind = response.daily[i].wind_speed;
       let windImperial = (wind * 2.237).toFixed(0);
 
       // date
-      $(`#five-day-${day}-date`).text(date);
+      $(`#five-day-${i}-date`).text(date);
       // temp
-      $(`#five-day-${day}-temp`).text(temp);
+      $(`#five-day-${i}-temp`).text(temp);
       // humidity
-      $(`#five-day-${day}-humidity`).text(humidity);
+      $(`#five-day-${i}-humidity`).text(humidity);
       // wind
-      $(`#five-day-${day}-wind`).text(windImperial);
+      $(`#five-day-${i}-wind`).text(windImperial);
       // icon
-      //   $(`#five-day-${day}-icon`).addClass("");
-      day++;
+      //   $(`#five-day-${i}-icon`).addClass("");
     }
   });
 }
