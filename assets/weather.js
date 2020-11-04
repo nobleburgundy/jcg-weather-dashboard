@@ -2,12 +2,14 @@ const API_KEY = "b9e555b2714e9fd91e3ffa2b450b8030";
 const LOCAL_STORAGE_KEY = "recent-weather-searches";
 let searchHistoryArray = [];
 let searchCity = "";
+let data;
 
 $(document).ready(function () {
   localSearchHistroyFromLocalStorage();
   renderSavedSearchButtons();
   // By default just load the latest city
-  getWeatherDataForCity(searchHistoryArray[0]);
+  searchCity = searchHistoryArray[0];
+  getWeatherDataForCity(searchCity);
 });
 
 $("#search-form").on("submit", function (event) {
@@ -58,31 +60,33 @@ let searchHistoryBtn = function (text) {
 
 // Render the saved searches array
 function renderSavedSearchButtons() {
-  console.log(searchHistoryArray);
+  //   console.log(searchHistoryArray);
   for (let i = 0; i < searchHistoryArray.length; i++) {
     $("#saved-search-list").append(searchHistoryBtn(searchHistoryArray[i]));
   }
 }
 
-function getWeatherDataForCity(city) {
-  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`;
+function getWeatherDataForCity() {
+  // use current weather api
+  let currentWeatherAPI = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${API_KEY}`;
 
   $.ajax({
-    url: apiUrl,
+    url: currentWeatherAPI,
     method: "GET",
   }).then(function (response) {
-    console.log(response);
+    // console.log(response);
+    let city = response.name;
     $("#jumbo-city").text(city);
-    let weatherTodayTempF = ktoF(response.list[0].main.temp);
-    let weatherTodayFeelsLikeTemp = ktoF(response.list[0].main.feels_like);
-    let lat = response.city.coord.lat;
-    let lon = response.city.coord.lon;
-    let windSpeedMetric = response.list[0].wind.speed;
+    let weatherTodayTempF = ktoF(response.main.temp);
+    let weatherTodayFeelsLikeTemp = ktoF(response.main.feels_like);
+    let lat = response.coord.lat;
+    let lon = response.coord.lon;
+    let windSpeedMetric = response.wind.speed;
     let windSpeedImperial = (windSpeedMetric * 2.237).toFixed(0);
-    let deg = response.list[0].wind.deg;
+    let deg = response.wind.deg;
     $("#todays-temperature").text(weatherTodayTempF);
     $("#todays-feels-like").text(weatherTodayFeelsLikeTemp);
-    $("#todays-humidity").text(response.list[0].main.humidity);
+    $("#todays-humidity").text(response.main.humidity);
     $("#todays-wind").text(windSpeedImperial + " mph ");
     $("#wind-dir-icon").css("transform", `rotate(${deg}deg)`);
     // uv index is from separate api
@@ -93,6 +97,41 @@ function getWeatherDataForCity(city) {
     }).then(function (response) {
       $("#todays-uv").text(response.value);
     });
+    setFiveDayForcast();
+  });
+}
+
+function setFiveDayForcast() {
+  // use forecast API
+  let forecastAPI = `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&appid=${API_KEY}`;
+  $.ajax({
+    url: forecastAPI,
+    method: "GET",
+  }).then(function (response) {
+    // loop through days, set the data
+    console.log(response);
+    let day = 1;
+    for (let i = 4; i < response.list.length; i += 8) {
+      // 8 items per day (every 3 hours)
+      // noon starts at 4
+      let date = response.list[i].dt_txt;
+      let temp = ktoF(response.list[i].main.temp);
+      let humidity = response.list[i].main.humidity;
+      let wind = response.list[i].wind.speed;
+      let windImperial = (wind * 2.237).toFixed(0);
+
+      // date
+      $(`#five-day-${day}-date`).text(date);
+      // temp
+      $(`#five-day-${day}-temp`).text(temp);
+      // humidity
+      $(`#five-day-${day}-humidity`).text(humidity);
+      // wind
+      $(`#five-day-${day}-wind`).text(windImperial);
+      // icon
+      //   $(`#five-day-${day}-icon`).addClass("");
+      day++;
+    }
   });
 }
 
@@ -100,39 +139,3 @@ let ktoF = function (kelvin) {
   let f = kelvin * 1.8 - 459.67;
   return f.toFixed(0);
 };
-
-// let degToDirection = function (deg) {
-//   deg = parseInt(deg);
-//   let direction = "";
-//   switch (true) {
-//     case deg > 0 && deg <= 45:
-//       direction = "NNE";
-//       break;
-//     case deg > 45 && deg <= 90:
-//       direction = "E";
-//       break;
-//     case deg > 90 && deg <= 135:
-//       direction = "SSE";
-//       break;
-//     case deg > 135 && deg <= 180:
-//       direction = "S";
-//       break;
-//     case deg > 180 && deg <= 225:
-//       direction = "SSW";
-//       break;
-//     case deg > 225 && deg <= 270:
-//       direction = "W";
-//       break;
-//     case deg > 270 && deg <= 315:
-//       console.log("test");
-//       direction = "NNW";
-//       break;
-//     case (deg > 315 && deg <= 360) || deg === 0:
-//       direction = "N";
-//       break;
-//   }
-
-//   return direction;
-// };
-
-function setTodaysWeather() {}
