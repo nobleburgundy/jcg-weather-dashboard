@@ -5,6 +5,7 @@ let searchCity = "";
 let data;
 let lat;
 let lon;
+// let zipPattern = /\d+/;
 
 $(document).ready(function () {
   localSearchHistroyFromLocalStorage();
@@ -62,7 +63,6 @@ let searchHistoryBtn = function (text) {
 
 // Render the saved searches array
 function renderSavedSearchButtons() {
-  //   console.log(searchHistoryArray);
   for (let i = 0; i < searchHistoryArray.length; i++) {
     $("#saved-search-list").append(searchHistoryBtn(searchHistoryArray[i]));
   }
@@ -76,7 +76,7 @@ function getWeatherDataForCity() {
     url: currentWeatherAPI,
     method: "GET",
   }).then(function (response) {
-    // console.log(response);
+    console.log(response);
     let city = response.name;
     $("#jumbo-city").text(city);
     let weatherTodayTempF = ktoF(response.main.temp);
@@ -86,11 +86,13 @@ function getWeatherDataForCity() {
     let windSpeedMetric = response.wind.speed;
     let windSpeedImperial = (windSpeedMetric * 2.237).toFixed(0);
     let deg = response.wind.deg;
+    let icon = response.weather[0].icon;
     $("#todays-temperature").text(weatherTodayTempF);
     $("#todays-feels-like").text(weatherTodayFeelsLikeTemp);
     $("#todays-humidity").text(response.main.humidity);
     $("#todays-wind").text(windSpeedImperial + " mph ");
     $("#wind-dir-icon").css("transform", `rotate(${deg}deg)`);
+    $("#jumbo-weather-icon").addClass(weatherIconToFAIconMap(icon));
     // uv index is from separate api
     let uvApiUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
     $.ajax({
@@ -114,11 +116,12 @@ function setFiveDayForcast() {
     console.log(response);
     for (let i = 1; i < 6; i++) {
       let dateUnix = response.daily[i].dt;
-      let date = moment.unix(dateUnix).format("L");
+      let date = moment.unix(dateUnix).format("dddd");
       let temp = ktoF(response.daily[i].temp.max);
       let humidity = response.daily[i].humidity;
       let wind = response.daily[i].wind_speed;
       let windImperial = (wind * 2.237).toFixed(0);
+      let openWeatherIcon = response.daily[i].weather[0].icon;
 
       // date
       $(`#five-day-${i}-date`).text(date);
@@ -129,12 +132,55 @@ function setFiveDayForcast() {
       // wind
       $(`#five-day-${i}-wind`).text(windImperial);
       // icon
-      //   $(`#five-day-${i}-icon`).addClass("");
+      $(`#five-day-${i}-icon`).removeClass().addClass(weatherIconToFAIconMap(openWeatherIcon));
     }
   });
 }
+
+let weatherIconToFAIconMap = function (openWeatherIconCode) {
+  // For now, just use the daytime icons, so replace the 'n' with 'd'
+  //   openWeatherIconCode = openWeatherIconCode.replace("n", "d");
+
+  let iconMap = {
+    "01d": "fas fa-sun",
+    "01n": "fas fa-moon",
+    "02d": "fas fa-cloud-sun",
+    "02n": "fas fa-cloud-moon",
+    "03d": "fas fa-cloud",
+    "03n": "fas fa-cloud-moon",
+    "04d": "fas fa-cloud",
+    "04n": "fas fa-cloud-moon",
+    "09d": "fas fa-cloud-rain",
+    "09d": "fas fa-cloud-moon-rain",
+    "10d": "fas fa-cloud-showers-heavy",
+    "10n": "fas fa-cloud-moon-rain",
+    "11d": "fas fa-bolt",
+    "11n": "fas fa-bolt",
+    "13d": "fas fa-snow",
+    "13n": "fas fa-snow",
+    "50d": "fas fa-cloud-rain",
+    "50n": "fas fa-cloud-moon-rain",
+  };
+  if (iconMap[openWeatherIconCode]) {
+    return iconMap[openWeatherIconCode];
+  }
+  // if not return a default
+  return "fas fa-rainbow";
+};
 
 let ktoF = function (kelvin) {
   let f = kelvin * 1.8 - 459.67;
   return f.toFixed(0);
 };
+
+// Icon list
+// Day icon	Night icon	Description         FA Icon Class
+// 01d.png 	01n.png 	clear sky           fas fa-sun                      fa-moon
+// 02d.png 	02n.png 	few clouds          fas fa-cloud-sun                fa-cloud-moon
+// 03d.png 	03n.png 	scattered clouds    fas fa-cloud                    fa-cloud-moon
+// 04d.png 	04n.png 	broken clouds       fas fa-cloud                    fa-cloud-moon
+// 09d.png 	09n.png 	shower rain         fas fa-cloud-rain               fa-cloud-moon-rain
+// 10d.png 	10n.png 	rain                fas fa-cloud-showers-heavy
+// 11d.png 	11n.png 	thunderstorm        fas fa-bolt
+// 13d.png 	13n.png 	snow                fas fa-snow
+// 50d.png 	50n.png 	mist                fas fa-cloud-rain
