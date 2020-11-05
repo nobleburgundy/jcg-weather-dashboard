@@ -25,20 +25,22 @@ $("#search-form").on("submit", function (event) {
 
 $(document).on("click", ".saved-search-btn", function () {
   searchCity = $(this).text();
-  console.log(searchCity);
   getWeatherDataForCity(searchCity);
   updateSearchHistory();
 });
 
 function updateSearchHistory() {
   // Store search in an array if not already there
-  if ($.inArray(searchCity, searchHistoryArray)) {
+  if ($.inArray(searchCity, searchHistoryArray) > -1) {
     // if already in the array, remove it from the list and array, then move to the front
     let existingButton = $(`button:contains(${searchCity})`);
     existingButton.remove();
+
+    // Remove from the array
     searchHistoryArray = searchHistoryArray.filter((text) => text !== searchCity);
   }
 
+  // add it to the front of the array
   searchHistoryArray.unshift(searchCity);
   $("#saved-search-list").prepend(searchHistoryBtn(searchCity));
   saveRecentSearchesToLocalStorage();
