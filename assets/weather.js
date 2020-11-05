@@ -138,9 +138,6 @@ function setFiveDayForcast() {
 }
 
 let weatherIconToFAIconMap = function (openWeatherIconCode) {
-  // For now, just use the daytime icons, so replace the 'n' with 'd'
-  //   openWeatherIconCode = openWeatherIconCode.replace("n", "d");
-
   let iconMap = {
     "01d": "fas fa-sun",
     "01n": "fas fa-moon",
@@ -172,15 +169,3 @@ let ktoF = function (kelvin) {
   let f = kelvin * 1.8 - 459.67;
   return f.toFixed(0);
 };
-
-// Icon list
-// Day icon	Night icon	Description         FA Icon Class
-// 01d.png 	01n.png 	clear sky           fas fa-sun                      fa-moon
-// 02d.png 	02n.png 	few clouds          fas fa-cloud-sun                fa-cloud-moon
-// 03d.png 	03n.png 	scattered clouds    fas fa-cloud                    fa-cloud-moon
-// 04d.png 	04n.png 	broken clouds       fas fa-cloud                    fa-cloud-moon
-// 09d.png 	09n.png 	shower rain         fas fa-cloud-rain               fa-cloud-moon-rain
-// 10d.png 	10n.png 	rain                fas fa-cloud-showers-heavy
-// 11d.png 	11n.png 	thunderstorm        fas fa-bolt
-// 13d.png 	13n.png 	snow                fas fa-snow
-// 50d.png 	50n.png 	mist                fas fa-cloud-rain
