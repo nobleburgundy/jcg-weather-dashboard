@@ -58,7 +58,7 @@ function localSearchHistroyFromLocalStorage() {
 
 let searchHistoryBtn = function (text) {
   let newButton = $("<button>");
-  newButton.addClass("btn btn-outline-primary saved-search-btn");
+  newButton.addClass("btn btn-outline-primary btn-sm saved-search-btn");
   newButton.text(text);
   return newButton;
 };
@@ -94,7 +94,7 @@ function getWeatherDataForCity() {
     $("#todays-humidity").text(response.main.humidity);
     $("#todays-wind").text(windSpeedImperial + " mph ");
     $("#wind-dir-icon").css("transform", `rotate(${deg}deg)`);
-    $("#jumbo-weather-icon").addClass(weatherIconToFAIconMap(icon));
+    $("#jumbo-weather-icon").removeClass().addClass(weatherIconToFAIconMap(icon));
     // uv index is from separate api
     let uvApiUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
     $.ajax({
@@ -155,16 +155,16 @@ let weatherIconToFAIconMap = function (openWeatherIconCode) {
     "10n": "fas fa-cloud-moon-rain",
     "11d": "fas fa-bolt",
     "11n": "fas fa-bolt",
-    "13d": "fas fa-snow",
-    "13n": "fas fa-snow",
-    "50d": "fas fa-cloud-rain",
-    "50n": "fas fa-cloud-moon-rain",
+    "13d": "fas fa-snowflake",
+    "13n": "fas fa-snowflake",
+    "50d": "fas fa-cloud",
+    "50n": "fas fa-cloud-moon",
   };
   if (iconMap[openWeatherIconCode]) {
     return iconMap[openWeatherIconCode];
   }
   // if not return a default
-  return "fas fa-rainbow";
+  return "fas fa-cloud-sun";
 };
 
 let ktoF = function (kelvin) {
