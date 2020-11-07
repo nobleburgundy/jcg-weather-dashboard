@@ -2,6 +2,7 @@ const API_KEY = "b9e555b2714e9fd91e3ffa2b450b8030";
 const LOCAL_STORAGE_KEY = "recent-weather-searches";
 let searchHistoryArray = [];
 let searchCity = "";
+let defaultCity = "North Pole";
 let data;
 let lat;
 let lon;
@@ -10,8 +11,8 @@ let lon;
 $(document).ready(function () {
   localSearchHistroyFromLocalStorage();
   renderSavedSearchButtons();
-  // By default just load the latest city
-  searchCity = searchHistoryArray[0];
+  // By default just load the most recent searched city
+  searchCity = searchHistoryArray[0] ? searchHistoryArray[0] : defaultCity;
   getWeatherDataForCity(searchCity);
 });
 
