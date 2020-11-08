@@ -102,6 +102,10 @@ function getWeatherDataForCity() {
       url: uvApiUrl,
       method: "GET",
     }).then(function (response) {
+      let uvIndex = response.value;
+      $("#todays-uv")
+        .removeClass()
+        .addClass(`uv-badge ${uvIndexClassMap(uvIndex)}`);
       $("#todays-uv").text(response.value);
     });
     setFiveDayForcast();
@@ -171,4 +175,23 @@ let weatherIconToFAIconMap = function (openWeatherIconCode) {
 let ktoF = function (kelvin) {
   let f = kelvin * 1.8 - 459.67;
   return f.toFixed(0);
+};
+
+let uvIndexClassMap = function (uvIndex) {
+  if (uvIndex > 11) {
+    // purple extreme
+    return "extreme-uv";
+  } else if (uvIndex > 7) {
+    // red very high
+    return "very-high-uv";
+  } else if (uvIndex > 5) {
+    // orange high
+    return "high-uv";
+  } else if (uvIndex > 3) {
+    // yellow medium
+    return "medium-uv";
+  } else {
+    // green low
+    return "low-uv";
+  }
 };
