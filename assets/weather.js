@@ -86,7 +86,10 @@ function getWeatherDataForCity() {
   }).then(function (response) {
     console.log(response);
     let city = response.name;
+    let dateUnix = response.dt;
+    let date = moment.unix(dateUnix).format("dddd MM/D");
     $("#jumbo-city").text(city);
+    $("#jumbo-date").text(date);
     let weatherTodayTempF = ktoF(response.main.temp);
     let weatherTodayFeelsLikeTemp = ktoF(response.main.feels_like);
     lat = response.coord.lat;
@@ -128,14 +131,16 @@ function setFiveDayForcast() {
     console.log(response);
     for (let i = 1; i < 6; i++) {
       let dateUnix = response.daily[i].dt;
-      let date = moment.unix(dateUnix).format("dddd");
+      let day = moment.unix(dateUnix).format("dddd");
+      let date = moment.unix(dateUnix).format("MM/D");
       let temp = ktoF(response.daily[i].temp.max);
       let humidity = response.daily[i].humidity;
       let wind = response.daily[i].wind_speed;
       let windImperial = (wind * 2.237).toFixed(0);
       let openWeatherIcon = response.daily[i].weather[0].icon;
 
-      // date
+      // day and date
+      $(`#five-day-${i}-day`).text(day);
       $(`#five-day-${i}-date`).text(date);
       // temp
       $(`#five-day-${i}-temp`).text(temp);

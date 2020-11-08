@@ -2,6 +2,10 @@
     background-color: #e5e5e5;
 }
 
+#jumbo-date {
+    font-size: medium;
+}
+
 #jumbo-weather-icon {
     font-size: 7rem;
 }
