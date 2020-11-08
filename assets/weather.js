@@ -43,7 +43,8 @@ function updateSearchHistory() {
 
   // add it to the front of the array
   searchHistoryArray.unshift(searchCity);
-  $("#saved-search-list").prepend(searchHistoryBtn(searchCity));
+  // $("#saved-search-list").prepend(searchHistoryBtn(searchCity));
+  renderSavedSearchButtons();
   saveRecentSearchesToLocalStorage();
 }
 
@@ -66,7 +67,11 @@ let searchHistoryBtn = function (text) {
 
 // Render the saved searches array
 function renderSavedSearchButtons() {
-  for (let i = 0; i < searchHistoryArray.length; i++) {
+  // load the 10 most recent
+  let buttonsToLoad = searchHistoryArray.length < 10 ? searchHistoryArray.length : 10;
+  console.log(buttonsToLoad);
+  $("#saved-search-list").empty();
+  for (let i = 0; i < buttonsToLoad; i++) {
     $("#saved-search-list").append(searchHistoryBtn(searchHistoryArray[i]));
   }
 }
