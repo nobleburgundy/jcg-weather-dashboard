@@ -47,7 +47,6 @@ function updateSearchHistory() {
 
   // add it to the front of the array
   searchHistoryArray.unshift(searchCity);
-  // $("#saved-search-list").prepend(searchHistoryBtn(searchCity));
   renderSavedSearchButtons();
   saveRecentSearchesToLocalStorage();
 }
@@ -109,7 +108,7 @@ function getWeatherDataForCity() {
     $("#wind-dir-icon").css("transform", `rotate(${deg}deg)`);
     $("#jumbo-weather-icon").removeClass().addClass(weatherIconToFAIconMap(icon));
     // uv index is from separate api
-    let uvApiUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+    let uvApiUrl = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
     $.ajax({
       url: uvApiUrl,
       method: "GET",
