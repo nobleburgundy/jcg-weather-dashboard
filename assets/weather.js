@@ -72,7 +72,6 @@ let searchHistoryBtn = function (text) {
 function renderSavedSearchButtons() {
   // load the 10 most recent
   let buttonsToLoad = searchHistoryArray.length < 10 ? searchHistoryArray.length : 10;
-  console.log(buttonsToLoad);
   $("#saved-search-list").empty();
   for (let i = 0; i < buttonsToLoad; i++) {
     $("#saved-search-list").append(searchHistoryBtn(searchHistoryArray[i]));
@@ -87,7 +86,6 @@ function getWeatherDataForCity() {
     url: currentWeatherAPI,
     method: "GET",
   }).then(function (response) {
-    console.log(response);
     let city = response.name;
     let dateUnix = response.dt;
     let date = moment.unix(dateUnix).format("dddd MM/D");
@@ -131,7 +129,6 @@ function setFiveDayForcast() {
     method: "GET",
   }).then(function (response) {
     // loop through days, set the data
-    console.log(response);
     for (let i = 1; i < 6; i++) {
       let dateUnix = response.daily[i].dt;
       let day = moment.unix(dateUnix).format("ddd");
