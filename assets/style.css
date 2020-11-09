@@ -14,6 +14,10 @@
     margin-bottom: 1%;
 }
 
+#five-day-forecast-section p {
+    font-size: small;
+}
+
 .saved-search-btn {
     width: 100%;
     margin: 1%;
@@ -79,10 +83,16 @@
     #jumbo-weather-icon {
         font-size: 5rem;
         float: right;
-
     }
 
-    #jumbo-day {
-        float: left;
+    .weather-icon {
+        font-size: 5rem;
+        margin: 0;
+        height: 100%;
+        line-height: 0;
+    }
+
+    .five-day-day, .five-day-date {
+        font-size: 2rem;
     }
  }
