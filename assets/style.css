@@ -41,6 +41,7 @@
     border-radius: 0;
 }
 
+/* UV Badge Styles */
 .uv-badge {
     padding: 1%;
     border-radius: 10%;
@@ -68,3 +69,20 @@
 .low-uv {
     background-color: #02c39a;
 }
+
+/* Hide the sidebar at medium breakpoint */
+@media (max-width: 720px) { 
+    #search-sidebar {
+        display: none;
+    }
+
+    #jumbo-weather-icon {
+        font-size: 5rem;
+        float: right;
+
+    }
+
+    #jumbo-day {
+        float: left;
+    }
+ }

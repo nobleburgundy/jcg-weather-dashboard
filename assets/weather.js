@@ -30,6 +30,10 @@ $(document).on("click", ".saved-search-btn", function () {
   updateSearchHistory();
 });
 
+$(".navbar-toggler").on("click", function () {
+  $("#search-sidebar").toggleClass("d-inline", "d-none");
+});
+
 function updateSearchHistory() {
   // Store search in an array if not already there
   if ($.inArray(searchCity, searchHistoryArray) > -1) {
