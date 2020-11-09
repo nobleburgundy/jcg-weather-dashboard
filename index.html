@@ -21,22 +21,23 @@
 <body>
     <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #90e0ef;">
         <a href="index.html" class="navbar-brand">Weather Dashboard</a>
-        <form id="search-form" class="form-inline ml-auto">
-            <input type="text" class="form-control" id="search-input" placeholder="Search for a city"
-                aria-label="search" aria-describedby="search-button" minlength="3" required>
-            <button class="btn btn-outline-primary ml-2" type="submit" id="search-button"><i
-                    class="fas fa-search"></i></button>
-        </form>
     </nav>
     <main class="container-fluid">
         <article class="row">
-            <aside class="col-md-2 p-3 mt-3 search-list">
-                <p>Recent Searches</p>
+            <aside class="col-md-3 mt-3 search-list">
+                <form id="search-form" class="input-group mt-3 mb-3">
+                    <input type="text" class="form-control" id="search-input" placeholder="Search for a city"
+                        aria-label="search" aria-describedby="search-button" minlength="3" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                </form>
+                <small>Recent Searches</small>
                 <div id="saved-search-list">
 
                 </div>
             </aside>
-            <section class="col-10">
+            <section class="col-9">
                 <div class="jumbotron p-3 mt-3 text-monospace">
                     <div class="row">
                         <div class="col-md-12">

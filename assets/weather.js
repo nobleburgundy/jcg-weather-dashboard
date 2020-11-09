@@ -131,7 +131,7 @@ function setFiveDayForcast() {
     console.log(response);
     for (let i = 1; i < 6; i++) {
       let dateUnix = response.daily[i].dt;
-      let day = moment.unix(dateUnix).format("dddd");
+      let day = moment.unix(dateUnix).format("ddd");
       let date = moment.unix(dateUnix).format("MM/D");
       let temp = ktoF(response.daily[i].temp.max);
       let humidity = response.daily[i].humidity;
