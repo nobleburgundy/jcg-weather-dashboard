@@ -93,6 +93,8 @@ function getWeatherDataForCity() {
     $("#jumbo-date").text(date);
     let weatherTodayTempF = ktoF(response.main.temp);
     let weatherTodayFeelsLikeTemp = ktoF(response.main.feels_like);
+    let weatherTodayLow = ktoF(response.main.temp_min);
+    let weatherTodayHigh = ktoF(response.main.temp_max);
     lat = response.coord.lat;
     lon = response.coord.lon;
     let windSpeedMetric = response.wind.speed;
@@ -100,6 +102,8 @@ function getWeatherDataForCity() {
     let deg = response.wind.deg;
     let icon = response.weather[0].icon;
     $("#todays-temperature").text(weatherTodayTempF);
+    $("#todays-low").text(weatherTodayHigh);
+    $("#todays-high").text(weatherTodayLow);
     $("#todays-feels-like").text(weatherTodayFeelsLikeTemp);
     $("#todays-humidity").text(response.main.humidity);
     $("#todays-wind").text(windSpeedImperial + " mph ");
@@ -134,6 +138,7 @@ function setFiveDayForcast() {
       let day = moment.unix(dateUnix).format("ddd");
       let date = moment.unix(dateUnix).format("MM/D");
       let temp = ktoF(response.daily[i].temp.max);
+      let low = ktoF(response.daily[i].temp.min);
       let humidity = response.daily[i].humidity;
       let wind = response.daily[i].wind_speed;
       let windImperial = (wind * 2.237).toFixed(0);
@@ -144,6 +149,7 @@ function setFiveDayForcast() {
       $(`#five-day-${i}-date`).text(date);
       // temp
       $(`#five-day-${i}-temp`).text(temp);
+      $(`#five-day-${i}-low`).text(low);
       // humidity
       $(`#five-day-${i}-humidity`).text(humidity);
       // wind
